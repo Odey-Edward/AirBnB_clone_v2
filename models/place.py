@@ -3,17 +3,20 @@
 from models.base_model import BaseModel, Base
 from models import HBNB_TYPE_STORAGE
 from sqlalchemy import Column, String, ForeignKey, Float, Integer
+from sqlalchemy.sql.schema import Table
 from sqlalchemy.orm import relationship
 from models.review import Review
 
 if HBNB_TYPE_STORAGE == 'db':
-    place_amenity = Table('place_amenity', Base.metadata,
-                    place_id = Column(String(60),
-                        ForeignKey('places.id'), primary_key=True,
-                        nullable=False)
-                    amenity_id = Column(String(60),
-                        ForeignKey('amenities.id'), primary_key=True,
-                        nullable=False))
+    metadata = Base.metadata
+    place_amenity = Table('place_amenity', metadata,
+                          Column('place_id', String(60),
+                                 ForeignKey('places.id'),
+                                 primary_key=True, nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey('amenities.id'),
+                                 primary_key=True, nullable=False))
+
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -30,8 +33,11 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        reviews = relationship('Review', backref='place', cascade='all, delete')
-        amenities = relationship('Amenity', secondary=place_amenity, viewonly=False, backref='place_amenity')
+        reviews = relationship(
+                'Review', backref='place', cascade='all, delete')
+        amenities = relationship(
+                'Amenity', secondary=place_amenity,
+                viewonly=False, backref='place_amenity')
     else:
         city_id = ""
         user_id = ""
@@ -59,7 +65,7 @@ class Place(BaseModel, Base):
                     reviewList.append[obj]
             return reviewList
 
-         @property
+        @property
         def amenities(self):
             """getter attribute amenities that returns the list of Amenity
             instances based on the attribute amenity_ids that contains all
@@ -74,7 +80,9 @@ class Place(BaseModel, Base):
 
         @amenities.setter
         def amenities(self, obj):
-            """setter attribute amenities that handles append method for adding"""
+            """
+            setter attribute amenities that handles append method for adding
+            """
             from models.amenity import Amenity
             if type(obj) == type(Amenity):
                 self.amenity_ids.append(obj.id)

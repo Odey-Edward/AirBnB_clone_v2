@@ -2,6 +2,7 @@
 """ State Module for HBNB project """
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
+from models import HBNB_TYPE_STORAGE
 
 
 class Amenity(BaseModel, Base):
