@@ -49,7 +49,7 @@ def do_deploy(archive_path):
             format(dest_path, folder_name))
         print("New version deployed!")
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -58,7 +58,7 @@ def deploy():
     creates and distributes an archive to web servers
     """
     path = do_pack()
-    if not path:
-        return False
-    else:
+    if path:
         return do_deploy(path)
+    else:
+        return False
