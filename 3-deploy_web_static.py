@@ -35,6 +35,7 @@ def do_deploy(archive_path):
     file_name = path.basename(archive_path)
     folder_name = file_name.replace(".tgz", "")
     dest_path = "/data/web_static/releases/"
+    result = False
     try:
         put(archive_path, "/tmp/{}".format(file_name))
         run("mkdir -p {}{}/".format(dest_path, folder_name))
@@ -48,9 +49,11 @@ def do_deploy(archive_path):
         run("ln -s {}{}/ /data/web_static/current".
             format(dest_path, folder_name))
         print("New version deployed!")
-        return True
+        result = True
     except Exception:
-        return False
+        result = False
+
+    return result
 
 
 def deploy():
