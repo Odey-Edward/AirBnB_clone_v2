@@ -44,4 +44,4 @@ echo "server {
 
 }" > /etc/nginx/sites-available/default
 
-sudo service nginx reload
+sudo service nginx restart
