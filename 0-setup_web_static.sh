@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#a Bash script that sets up your web servers for the deployment of web_static
 
 sudo mkdir -p /data/web_static/releases/test/
 sudo mkdir -p /data/web_static/shared/
