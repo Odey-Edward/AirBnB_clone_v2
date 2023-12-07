@@ -17,7 +17,7 @@ echo "<html>
 
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-sudo chown -R "$USER":"$USER" /data
+sudo chown -hR ubuntu:ubuntu /data/
 
 echo "server {
    listen 80 default_server;
