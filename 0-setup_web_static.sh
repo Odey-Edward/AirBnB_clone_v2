@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 #a Bash script that sets up your web servers for the deployment of web_static
 
-sudo mkdir -p /data/web_static/releases/test/
-sudo mkdir -p /data/web_static/shared/
+sudo apt-get -y update
+sudo apt-get -y upgrade
+sudo apt-get -y install nginx
+
+sudo mkdir -p /data/web_static/releases/test/ /data/web_static/shared/
 
 echo "<html>
   <head>
@@ -20,13 +23,12 @@ echo "server {
    listen 80 default_server;
    listen [::]:80 default_server;
 
-
    root /var/www/html;
    index index.html;
 
    location / {
         add_header X-Served-By $HOSTNAME;
-  }
+   }
    location /redirect_me {
       return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
    }
