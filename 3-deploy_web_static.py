@@ -4,11 +4,12 @@ Code Deployment
 """
 from os import path
 from datetime import datetime
-from fabric.api import local, run, put, env
+from fabric.api import local, run, put, env, runs_once
 
 env.hosts = ["54.86.225.115", "54.198.34.163"]
 
 
+@runs_once
 def do_pack():
     """
     archive and compress the web_static directory
@@ -57,8 +58,7 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """
-    creates and distributes an archive to web servers
+    """Archives and deploys the static files to the host servers.
     """
     path = do_pack()
     if path:
