@@ -2,7 +2,7 @@
 """
 Code Deployment
 """
-from os import path
+from os import path, stat
 from datetime import datetime
 from fabric.api import local, run, put, env, runs_once
 
@@ -17,9 +17,12 @@ def do_pack():
     time = datetime.now().strftime("%Y%m%d%H%M%S")
     name = "web_static_{}.tgz".format(time)
 
-    local("mkdir -p versions")
     path = "versions/{}".format(name)
+    print("Packing web_static to {}".format(path))
+    local("mkdir -p versions")
     result = local("tar -czvf {} web_static".format(path))
+    archize_size = stat(path).st_size
+    print("web_static packed: {} -> {}Bytes".format(path, archize_size))
 
     if result.failed:
         return (None)
