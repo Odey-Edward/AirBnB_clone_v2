@@ -16,10 +16,10 @@ def do_pack():
     """
     time = datetime.now().strftime("%Y%m%d%H%M%S")
     name = "web_static_{}.tgz".format(time)
-
     path = "versions/{}".format(name)
     print("Packing web_static to {}".format(path))
     local("mkdir -p versions")
+    local("touch web_static/my_index.html")
     result = local("tar -czvf {} web_static".format(path))
     archize_size = stat(path).st_size
     print("web_static packed: {} -> {}Bytes".format(path, archize_size))
