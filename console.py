@@ -217,12 +217,14 @@ class HBNBCommand(cmd.Cmd):
 
         print_list = []
 
+
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
+
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
-                return
-
+                return 
+        
         if HBNB_TYPE_STORAGE != 'db':
             if args:
                 for k, v in storage._FileStorage__objects.items():
@@ -234,7 +236,11 @@ class HBNBCommand(cmd.Cmd):
 
             print(print_list)
         else:
-            obj = storage.all(HBNBCommand.classes[args])
+            if args:
+                obj = storage.all(HBNBCommand.classes[args])
+            else:
+                obj = storage.all()
+
             for k, v in obj.items():
                 print_list.append(str(v))
             print(print_list)
