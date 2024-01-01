@@ -5,24 +5,20 @@ on 0.0.0.0, port 5000"""
 from flask import Flask, render_template
 from models import storage
 from models.state import State
+from models.amenity import Amenity
 
 
 app = Flask(__name__)
 
 
-@app.route('/states', strict_slashes=False)
-@app.route('/states/<id>', strict_slashes=False)
-def states(id=None):
-    """return all States"""
+@app.route('/hbnb_filters', strict_slashes=False)
+def hbnb_filters():
+    """return a html template containing
+    the state, cities and amenities"""
     states = storage.all(State)
-    if not id:
-        return render_template('9-states.html', states=states, id=id)
+    amenity = storage.all(Amenity)
 
-    for state in states.values():
-        if state.id == id:
-            return render_template('9-states.html', state=state)
-
-    return render_template('9-states.html', state=state)
+    return render_template('10-hbnb_filters.html', states=states, amenities=amenity)
 
 
 @app.teardown_appcontext
