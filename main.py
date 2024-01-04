@@ -1,38 +1,50 @@
 #!/usr/bin/python3
+"""Doc
 """
- Test cities access from a state
-"""
+import MySQLdb
+import sys
+import uuid
 from models import storage
 from models.state import State
-from models.city import City
-
-"""
- Objects creations
-"""
-state_1 = State(name="California")
-print("New state: {}".format(state_1))
-state_1.save()
-state_2 = State(name="Arizona")
-print("New state: {}".format(state_2))
-state_2.save()
-
-city_1_1 = City(state_id=state_1.id, name="Napa")
-print("New city: {} in the state: {}".format(city_1_1, state_1))
-city_1_1.save()
-city_1_2 = City(state_id=state_1.id, name="Sonoma")
-print("New city: {} in the state: {}".format(city_1_2, state_1))
-city_1_2.save()
-city_2_1 = City(state_id=state_2.id, name="Page")
-print("New city: {} in the state: {}".format(city_2_1, state_2))
-city_2_1.save()
 
 
-"""
- Verification
-"""
-print("")
-all_states = storage.all(State)
-for state_id, state in all_states.items():
-    for city in state.cities:
-        print("Find the city {} in the state {}".format(city, state))
 
+def add_states(number=1):
+    conn = MySQLdb.connect(host="localhost", port=3306, user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3], charset="utf8")
+    cur = conn.cursor()
+
+    for i in range(number):
+        cur.execute("INSERT INTO `states` (id, created_at, updated_at, name) VALUES ('{}','2016-03-25 19:42:40','2016-03-25 19:42:40','state{}');".format(str(uuid.uuid4()), i))
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def wrapper_all_type(m_class):
+    res = {}
+    try:
+        res = storage.all(m_class)
+    except:
+        res = {}
+    if res is None or len(res.keys()) == 0:
+        try:
+            res = storage.all(m_class.__name__)
+        except:
+            res = {}
+    return res
+        
+
+print(len(wrapper_all_type(State)))
+
+# Initial number of states
+add_states(3)
+
+storage.close()
+print(len(wrapper_all_type(State)))
+
+# Add new states
+add_states(2)
+
+storage.close()
+print(len(wrapper_all_type(State)))
